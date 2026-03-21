@@ -72,7 +72,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 right: 20,
                 child: TextButton(
                   onPressed: () => _pc.jumpToPage(2),
-                  child: Text('Saltar', style: dmSans(14, color: softGray)),
+                  child: Text('Saltar', style: bodyText(14, color: softGray)),
                 ),
               ),
 
@@ -155,7 +155,7 @@ class _SlideView extends StatelessWidget {
             delay: const Duration(milliseconds: 100),
             child: Text(
               slide.title,
-              style: syneBold(30),
+              style: titleBold(30),
               textAlign: TextAlign.center,
             ),
           ),
@@ -165,7 +165,7 @@ class _SlideView extends StatelessWidget {
             delay: const Duration(milliseconds: 200),
             child: Text(
               slide.subtitle,
-              style: dmSans(16, color: softGray),
+              style: bodyText(16, color: softGray),
               textAlign: TextAlign.center,
             ),
           ),

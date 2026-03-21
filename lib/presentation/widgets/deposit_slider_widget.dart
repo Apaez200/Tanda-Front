@@ -67,8 +67,8 @@ class _DepositSliderWidgetState extends State<DepositSliderWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text('Hoy (día ${widget.todayDay})', style: dmSans(12, color: softGray)),
-            Text('Día ${widget.maxDay}', style: dmSans(12, color: softGray)),
+            Text('Hoy (día ${widget.todayDay})', style: bodyText(12, color: softGray)),
+            Text('Día ${widget.maxDay}', style: bodyText(12, color: softGray)),
           ],
         ),
         SliderTheme(
@@ -100,14 +100,14 @@ class _DepositSliderWidgetState extends State<DepositSliderWidget> {
           ),
         ),
         const SizedBox(height: 12),
-        Text('Días invertidos: $daysInvested', style: dmSans(14, color: offWhite)),
+        Text('Días invertidos: $daysInvested', style: bodyText(14, color: offWhite)),
         const SizedBox(height: 4),
         Text(
           'Rendimiento estimado: +${projected.toStringAsFixed(2)}',
-          style: dmSans(15, color: successGreen, weight: FontWeight.w600),
+          style: bodyText(15, color: successGreen, weight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
-        Text(_motivation(day), style: dmSans(13, color: accentGold)),
+        Text(_motivation(day), style: bodyText(13, color: accentGold)),
       ],
     );
   }

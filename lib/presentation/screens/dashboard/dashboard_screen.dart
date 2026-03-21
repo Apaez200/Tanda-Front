@@ -63,7 +63,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: darkBg,
       appBar: AppBar(
         backgroundColor: darkBg,
-        title: Text('TandaChain', style: syneBold(22, color: accentGold)),
+        title: Text('TandaChain', style: titleBold(22, color: accentGold)),
         actions: [
           // Prototype: simulate turno
           Tooltip(
@@ -129,7 +129,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Próximo corte', style: syneSemi(16)),
+                      Text('Próximo corte', style: titleSemi(16)),
                       const SizedBox(height: 12),
                       CountdownWidget(
                         targetDateTime: _cutoff,
@@ -149,7 +149,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     children: [
                       Text(
                         'Participantes ($deposited/${tanda.totalParticipants} depositaron)',
-                        style: syneSemi(16),
+                        style: titleSemi(16),
                       ),
                       const SizedBox(height: 14),
                       ParticipantRingWidget(
@@ -178,7 +178,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 Center(
                   child: TextButton.icon(
                     icon: const Icon(Icons.exit_to_app, size: 16, color: softGray),
-                    label: Text('Salir de la tanda', style: dmSans(13, color: softGray)),
+                    label: Text('Salir de la tanda', style: bodyText(13, color: softGray)),
                     onPressed: () => context.push('/exit'),
                   ),
                 ),
@@ -229,10 +229,10 @@ class _MainPoolCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(tanda.name, style: syneSemi(17)),
+                    Text(tanda.name, style: titleSemi(17)),
                     Text(
                       'Ronda ${tanda.currentRound} de ${tanda.totalParticipants}',
-                      style: dmSans(13, color: softGray),
+                      style: bodyText(13, color: softGray),
                     ),
                   ],
                 ),
@@ -244,19 +244,19 @@ class _MainPoolCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: primaryGreen.withOpacity(0.5)),
                 ),
-                child: Text('Activa', style: dmSans(12, color: successGreen, weight: FontWeight.w600)),
+                child: Text('Activa', style: bodyText(12, color: successGreen, weight: FontWeight.w600)),
               ),
             ],
           ),
           const SizedBox(height: 20),
-          Text('La Caja', style: dmSans(13, color: softGray)),
+          Text('La Caja', style: bodyText(13, color: softGray)),
           const SizedBox(height: 4),
           YieldCounterWidget(
             initialValue: total,
             incrementPerTick: tickIncrement,
             tickSeconds: 10,
             format: (v) => fmt.format(v),
-            textStyle: syneBold(38, color: offWhite),
+            textStyle: titleBold(38, color: offWhite),
           ),
           const SizedBox(height: 8),
           Row(
@@ -265,7 +265,7 @@ class _MainPoolCard extends StatelessWidget {
               const SizedBox(width: 4),
               Text(
                 '+${fmt.format(tanda.accumulatedYield)} generados este mes ✨',
-                style: dmSans(13, color: successGreen, weight: FontWeight.w600),
+                style: bodyText(13, color: successGreen, weight: FontWeight.w600),
               ),
             ],
           ),
@@ -307,10 +307,10 @@ class _UserStatusCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('✅ Depositado', style: syneSemi(15, color: successGreen)),
+                  Text('✅ Depositado', style: titleSemi(15, color: successGreen)),
                   Text(
                     'Llevas 15 días generando rendimiento',
-                    style: dmSans(13, color: softGray),
+                    style: bodyText(13, color: softGray),
                   ),
                 ],
               ),
@@ -330,7 +330,7 @@ class _UserStatusCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Tu turno es el 3 — aún no has depositado', style: dmSans(14, color: softGray)),
+          Text('Tu turno es el 3 — aún no has depositado', style: bodyText(14, color: softGray)),
           const SizedBox(height: 12),
           CustomButton(
             label: 'Depositar ${fmt.format(amount)} ahora →',
@@ -383,9 +383,9 @@ class _ProfileTab extends StatelessWidget {
             child: const Icon(Icons.person_rounded, color: offWhite, size: 40),
           ),
           const SizedBox(height: 16),
-          Text('Tú', style: syneBold(22)),
+          Text('Tú', style: titleBold(22)),
           const SizedBox(height: 4),
-          Text('Turno #3 • Miembro activo', style: dmSans(14, color: softGray)),
+          Text('Turno #3 • Miembro activo', style: bodyText(14, color: softGray)),
           const SizedBox(height: 24),
           _statRow('Tandas completadas', '1'),
           _statRow('Rendimiento total', '+\$192.50 MXN'),
@@ -400,8 +400,8 @@ class _ProfileTab extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(label, style: dmSans(14, color: softGray)),
-            Text(val, style: dmSans(14, color: accentGold, weight: FontWeight.w600)),
+            Text(label, style: bodyText(14, color: softGray)),
+            Text(val, style: bodyText(14, color: accentGold, weight: FontWeight.w600)),
           ],
         ),
       );

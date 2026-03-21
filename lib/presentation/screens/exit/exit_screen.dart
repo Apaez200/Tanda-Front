@@ -32,7 +32,7 @@ class ExitScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: darkBg,
       appBar: AppBar(
-        title: Text('Salir de la Tanda', style: syneBold(20)),
+        title: Text('Salir de la Tanda', style: titleBold(20)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_rounded),
           onPressed: () => context.pop(),
@@ -60,7 +60,7 @@ class ExitScreen extends StatelessWidget {
                     Expanded(
                       child: Text(
                         '¿Seguro que quieres salirte? Esto tiene consecuencias.',
-                        style: dmSans(15, color: offWhite, weight: FontWeight.w600),
+                        style: bodyText(15, color: offWhite, weight: FontWeight.w600),
                       ),
                     ),
                   ],
@@ -76,7 +76,7 @@ class ExitScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Penalización según cuándo avises:', style: syneSemi(15)),
+                    Text('Penalización según cuándo avises:', style: titleSemi(15)),
                     const SizedBox(height: 14),
                     _penRow('✅', 'Con 2+ meses de aviso', 'Sin penalización', successGreen),
                     _penRow('🟡', 'Con 1-2 meses', 'Pierdes 5% (~\$50)', accentGold),
@@ -95,7 +95,7 @@ class ExitScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Si avisas HOY (día $today):', style: syneSemi(15)),
+                    Text('Si avisas HOY (día $today):', style: titleSemi(15)),
                     const SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.all(12),
@@ -108,7 +108,7 @@ class ExitScreen extends StatelessWidget {
                         children: [
                           const Icon(Icons.warning_rounded, color: warningRed, size: 22),
                           const SizedBox(width: 8),
-                          Text('Penalización: $penDesc', style: dmSans(14, color: warningRed, weight: FontWeight.w700)),
+                          Text('Penalización: $penDesc', style: bodyText(14, color: warningRed, weight: FontWeight.w700)),
                         ],
                       ),
                     ),
@@ -127,7 +127,7 @@ class ExitScreen extends StatelessWidget {
                           Expanded(
                             child: Text(
                               'Si esperas hasta el $safeDateStr, sales sin perder nada',
-                              style: dmSans(13, color: successGreen),
+                              style: bodyText(13, color: successGreen),
                             ),
                           ),
                         ],
@@ -172,19 +172,19 @@ class ExitScreen extends StatelessWidget {
       builder: (_) => AlertDialog(
         backgroundColor: cardBg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text('¿Confirmas?', style: syneBold(18)),
+        title: Text('¿Confirmas?', style: titleBold(18)),
         content: Text(
           'Perderás \$150 de penalización por salir con menos de 15 días de aviso.',
-          style: dmSans(14, color: softGray),
+          style: bodyText(14, color: softGray),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancelar', style: dmSans(14, color: softGray)),
+            child: Text('Cancelar', style: bodyText(14, color: softGray)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text('Confirmar salida', style: dmSans(14, color: warningRed, weight: FontWeight.w700)),
+            child: Text('Confirmar salida', style: bodyText(14, color: warningRed, weight: FontWeight.w700)),
           ),
         ],
       ),
@@ -196,7 +196,7 @@ class ExitScreen extends StatelessWidget {
           backgroundColor: cardBg,
           content: Text(
             'Solicitud registrada. Tienes 15 días hábiles para completar el proceso.',
-            style: dmSans(13, color: offWhite),
+            style: bodyText(13, color: offWhite),
           ),
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -222,8 +222,8 @@ class ExitScreen extends StatelessWidget {
           children: [
             Text(emoji, style: const TextStyle(fontSize: 18)),
             const SizedBox(width: 10),
-            Expanded(child: Text(label, style: dmSans(13, color: softGray))),
-            Text(consequence, style: dmSans(13, color: color, weight: FontWeight.w600)),
+            Expanded(child: Text(label, style: bodyText(13, color: softGray))),
+            Text(consequence, style: bodyText(13, color: color, weight: FontWeight.w600)),
           ],
         ),
       );

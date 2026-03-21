@@ -62,7 +62,7 @@ class _CustomButtonState extends State<CustomButton> with SingleTickerProviderSt
                   )
                 : Text(
                     widget.label,
-                    style: dmSans(16, color: colors.fg, weight: FontWeight.w600),
+                    style: bodyText(16, color: colors.fg, weight: FontWeight.w600),
                     textAlign: TextAlign.center,
                   ),
           ),

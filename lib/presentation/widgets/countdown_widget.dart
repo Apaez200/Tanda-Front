@@ -68,7 +68,7 @@ class _CountdownWidgetState extends State<CountdownWidget> {
         duration: const Duration(milliseconds: 900),
         child: Text(
           '¡Tiempo!',
-          style: syneBold(22, color: accentGold),
+          style: titleBold(22, color: accentGold),
           textAlign: TextAlign.center,
         ),
       );
@@ -77,7 +77,7 @@ class _CountdownWidgetState extends State<CountdownWidget> {
     final h = _remaining.inHours.remainder(24);
     final m = _remaining.inMinutes.remainder(60);
     final s = _remaining.inSeconds.remainder(60);
-    final label = widget.labelStyle ?? dmSans(11, color: softGray);
+    final label = widget.labelStyle ?? bodyText(11, color: softGray);
 
     return Row(
       children: [
@@ -107,7 +107,7 @@ class _CountdownWidgetState extends State<CountdownWidget> {
           children: [
             Text(
               value,
-              style: syneBold(20, color: widget.numberColor),
+              style: titleBold(20, color: widget.numberColor),
             ),
             const SizedBox(height: 4),
             Text(hint, style: label),

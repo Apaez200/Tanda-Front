@@ -53,7 +53,7 @@ class _DepositScreenState extends State<DepositScreen> {
           children: [
             Center(
               child: Text('✅ ¡Listo! Tu dinero ya está trabajando',
-                  style: syneBold(20, color: successGreen), textAlign: TextAlign.center),
+                  style: titleBold(20, color: successGreen), textAlign: TextAlign.center),
             ),
             const SizedBox(height: 20),
             _row('Depositaste', _fmt.format(mockTanda.amountPerPerson)),
@@ -81,8 +81,8 @@ class _DepositScreenState extends State<DepositScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(l, style: dmSans(14, color: softGray)),
-            Text(v, style: dmSans(14, color: offWhite, weight: FontWeight.w600)),
+            Text(l, style: bodyText(14, color: softGray)),
+            Text(v, style: bodyText(14, color: offWhite, weight: FontWeight.w600)),
           ],
         ),
       );
@@ -96,7 +96,7 @@ class _DepositScreenState extends State<DepositScreen> {
     return Scaffold(
       backgroundColor: darkBg,
       appBar: AppBar(
-        title: Text('Depositar', style: syneBold(20)),
+        title: Text('Depositar', style: titleBold(20)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_rounded),
           onPressed: () => context.pop(),
@@ -119,10 +119,10 @@ class _DepositScreenState extends State<DepositScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('¿Cuánto vas a depositar?', style: dmSans(14, color: softGray)),
+                    Text('¿Cuánto vas a depositar?', style: bodyText(14, color: softGray)),
                     const SizedBox(height: 8),
-                    Text(_fmt.format(amount), style: syneBold(42, color: accentGold)),
-                    Text('Este es tu monto de la ronda', style: dmSans(13, color: softGray)),
+                    Text(_fmt.format(amount), style: titleBold(42, color: accentGold)),
+                    Text('Este es tu monto de la ronda', style: bodyText(13, color: softGray)),
                   ],
                 ),
               ),
@@ -141,7 +141,7 @@ class _DepositScreenState extends State<DepositScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('¿Cuándo depositas?', style: syneSemi(16)),
+                    Text('¿Cuándo depositas?', style: titleSemi(16)),
                     const SizedBox(height: 16),
                     DepositSliderWidget(
                       minDay: 1,
@@ -170,7 +170,7 @@ class _DepositScreenState extends State<DepositScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Resumen', style: syneSemi(16)),
+                    Text('Resumen', style: titleSemi(16)),
                     const SizedBox(height: 12),
                     _row('Depositas', _fmt.format(amount)),
                     _row('Días invertidos', '$days días'),

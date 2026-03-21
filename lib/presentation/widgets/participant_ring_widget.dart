@@ -65,7 +65,7 @@ class _ParticipantTile extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   initial,
-                  style: syneBold(20, color: offWhite),
+                  style: titleBold(20, color: offWhite),
                 ),
               ),
               Positioned(
@@ -91,12 +91,12 @@ class _ParticipantTile extends StatelessWidget {
             participant.isMe ? 'Tú' : participant.name,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: dmSans(11, color: participant.isMe ? accentGold : offWhite, weight: FontWeight.w600),
+            style: bodyText(11, color: participant.isMe ? accentGold : offWhite, weight: FontWeight.w600),
             textAlign: TextAlign.center,
           ),
           Text(
             'Turno ${participant.turn}',
-            style: dmSans(10, color: softGray),
+            style: bodyText(10, color: softGray),
           ),
         ],
       ),

@@ -76,7 +76,7 @@ class _FrozenScreenState extends State<FrozenScreen>
     return Scaffold(
       backgroundColor: darkBg,
       appBar: AppBar(
-        title: Text('Fondos Bloqueados 🔒', style: syneBold(20)),
+        title: Text('Fondos Bloqueados 🔒', style: titleBold(20)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_rounded),
           onPressed: () => context.pop(),
@@ -144,16 +144,16 @@ class _FrozenScreenState extends State<FrozenScreen>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Rendimiento generando', style: dmSans(14, color: softGray)),
+                        Text('Rendimiento generando', style: bodyText(14, color: softGray)),
                         Row(
                           children: [
-                            Text('+', style: dmSans(14, color: successGreen, weight: FontWeight.w600)),
+                            Text('+', style: bodyText(14, color: successGreen, weight: FontWeight.w600)),
                             YieldCounterWidget(
                               initialValue: 0,
                               incrementPerTick: incPer10s,
                               tickSeconds: 10,
                               format: (v) => v.toStringAsFixed(4),
-                              textStyle: dmSans(14, color: successGreen, weight: FontWeight.w600),
+                              textStyle: bodyText(14, color: successGreen, weight: FontWeight.w600),
                             ),
                           ],
                         ),
@@ -161,7 +161,7 @@ class _FrozenScreenState extends State<FrozenScreen>
                     ),
                     const SizedBox(height: 16),
                     // Barra de 7 días
-                    Text('Progreso de espera', style: dmSans(12, color: softGray)),
+                    Text('Progreso de espera', style: bodyText(12, color: softGray)),
                     const SizedBox(height: 6),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8),
@@ -176,8 +176,8 @@ class _FrozenScreenState extends State<FrozenScreen>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Día 0', style: dmSans(11, color: softGray)),
-                        Text('Día 7', style: dmSans(11, color: softGray)),
+                        Text('Día 0', style: bodyText(11, color: softGray)),
+                        Text('Día 7', style: bodyText(11, color: softGray)),
                       ],
                     ),
                   ],
@@ -201,7 +201,7 @@ class _FrozenScreenState extends State<FrozenScreen>
                   ),
                   child: Text(
                     _quotes[_quoteIndex],
-                    style: dmSans(15, color: offWhite),
+                    style: bodyText(15, color: offWhite),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -223,7 +223,7 @@ class _FrozenScreenState extends State<FrozenScreen>
                 alignment: Alignment.center,
                 child: Text(
                   'Disponible el ${_fmtDate.format(_unlockDate)}',
-                  style: dmSans(15, color: softGray),
+                  style: bodyText(15, color: softGray),
                 ),
               ),
             ),
@@ -234,13 +234,13 @@ class _FrozenScreenState extends State<FrozenScreen>
     );
   }
 
-  Widget _sectionLabel(String text) => Text(text, style: syneSemi(16));
+  Widget _sectionLabel(String text) => Text(text, style: titleSemi(16));
 
   Widget _row(String l, String v) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(l, style: dmSans(14, color: softGray)),
-          Text(v, style: dmSans(14, color: offWhite, weight: FontWeight.w600)),
+          Text(l, style: bodyText(14, color: softGray)),
+          Text(v, style: bodyText(14, color: offWhite, weight: FontWeight.w600)),
         ],
       );
 }

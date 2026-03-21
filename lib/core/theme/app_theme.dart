@@ -25,9 +25,9 @@ ThemeData buildAppTheme() {
       centerTitle: false,
     ),
     textTheme: TextTheme(
-      bodyLarge: GoogleFonts.dmSans(color: offWhite),
-      bodyMedium: GoogleFonts.dmSans(color: offWhite),
-      titleLarge: GoogleFonts.syne(fontWeight: FontWeight.w700, color: offWhite),
+      bodyLarge: GoogleFonts.inter(color: offWhite),
+      bodyMedium: GoogleFonts.inter(color: offWhite),
+      titleLarge: GoogleFonts.montserrat(fontWeight: FontWeight.w700, color: offWhite),
     ),
     dividerColor: softGray.withOpacity(0.3),
   );

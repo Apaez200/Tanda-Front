@@ -18,7 +18,7 @@ class HistoryScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: darkBg,
       appBar: AppBar(
-        title: Text('Mi Historial', style: syneBold(20)),
+        title: Text('Mi Historial', style: titleBold(20)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_rounded),
           onPressed: () => Navigator.pop(context),
@@ -44,10 +44,10 @@ class HistoryScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Total ganado en rendimientos', style: dmSans(13, color: softGray)),
+                            Text('Total ganado en rendimientos', style: bodyText(13, color: softGray)),
                             Text(
                               '+\$${totalYield.toStringAsFixed(2)} MXN',
-                              style: syneBold(22, color: successGreen),
+                              style: titleBold(22, color: successGreen),
                             ),
                           ],
                         ),
@@ -55,8 +55,8 @@ class HistoryScreen extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text('Tandas completadas', style: dmSans(12, color: softGray)),
-                          Text('1', style: syneBold(22, color: accentGold)),
+                          Text('Tandas completadas', style: bodyText(12, color: softGray)),
+                          Text('1', style: titleBold(22, color: accentGold)),
                         ],
                       ),
                     ],
@@ -70,7 +70,7 @@ class HistoryScreen extends StatelessWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-              child: Text('Transacciones', style: syneSemi(16)),
+              child: Text('Transacciones', style: titleSemi(16)),
             ),
           ),
 
@@ -131,15 +131,15 @@ class _TransactionTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(transaction.description, style: dmSans(14, weight: FontWeight.w600)),
+                    Text(transaction.description, style: bodyText(14, weight: FontWeight.w600)),
                     const SizedBox(height: 2),
-                    Text(transaction.date, style: dmSans(12, color: softGray)),
+                    Text(transaction.date, style: bodyText(12, color: softGray)),
                   ],
                 ),
               ),
               Text(
                 '${positive ? '+' : ''}\$${transaction.amount.abs().toStringAsFixed(2)}',
-                style: syneSemi(15,
+                style: titleSemi(15,
                     color: positive ? successGreen : warningRed),
               ),
             ],
@@ -154,7 +154,7 @@ class _TransactionTile extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
                 child: Text(
                   'Ver en blockchain →',
-                  style: dmSans(11, color: softGray),
+                  style: bodyText(11, color: softGray),
                 ),
               ),
             ),

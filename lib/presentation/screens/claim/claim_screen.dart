@@ -49,11 +49,11 @@ class _ClaimScreenState extends State<ClaimScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('🎉 ¡Cobrado!', style: syneBold(24, color: successGreen)),
+            Text('🎉 ¡Cobrado!', style: titleBold(24, color: successGreen)),
             const SizedBox(height: 8),
-            Text('\$4,950 en camino a tu wallet', style: dmSans(15, color: offWhite), textAlign: TextAlign.center),
+            Text('\$4,950 en camino a tu wallet', style: bodyText(15, color: offWhite), textAlign: TextAlign.center),
             const SizedBox(height: 4),
-            Text('\$200 ya reservados para la siguiente ronda 🔒', style: dmSans(13, color: softGray), textAlign: TextAlign.center),
+            Text('\$200 ya reservados para la siguiente ronda 🔒', style: bodyText(13, color: softGray), textAlign: TextAlign.center),
             const SizedBox(height: 24),
             CustomButton(
               label: 'Ver historial',
@@ -76,19 +76,19 @@ class _ClaimScreenState extends State<ClaimScreen> {
       builder: (_) => AlertDialog(
         backgroundColor: cardBg,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text('¿Estás completamente seguro?', style: syneBold(18)),
+        title: Text('¿Estás completamente seguro?', style: titleBold(18)),
         content: Text(
           'Tu dinero quedará congelado hasta el ${_frozenDate()}.\nNo podrás retirar nada antes de esa fecha.',
-          style: dmSans(14, color: softGray),
+          style: bodyText(14, color: softGray),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: Text('Cancelar', style: dmSans(14, color: softGray)),
+            child: Text('Cancelar', style: bodyText(14, color: softGray)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: Text('Sí, congelar mi dinero', style: dmSans(14, color: warningRed, weight: FontWeight.w700)),
+            child: Text('Sí, congelar mi dinero', style: bodyText(14, color: warningRed, weight: FontWeight.w700)),
           ),
         ],
       ),
@@ -108,7 +108,7 @@ class _ClaimScreenState extends State<ClaimScreen> {
     return Scaffold(
       backgroundColor: darkBg,
       appBar: AppBar(
-        title: Text('¡Es tu turno! 🏆', style: syneBold(20, color: accentGold)),
+        title: Text('¡Es tu turno! 🏆', style: titleBold(20, color: accentGold)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_rounded),
           onPressed: () => context.pop(),
@@ -147,7 +147,7 @@ class _ClaimScreenState extends State<ClaimScreen> {
                     ),
                     child: Column(
                       children: [
-                        Text('Tienes disponible', style: dmSans(14, color: softGray)),
+                        Text('Tienes disponible', style: bodyText(14, color: softGray)),
                         const SizedBox(height: 8),
                         _AnimatedAmount(target: 5150.0, fmt: _fmt),
                         const SizedBox(height: 12),
@@ -213,8 +213,8 @@ class _ClaimScreenState extends State<ClaimScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(l, style: dmSans(13, color: softGray)),
-            Text(v, style: dmSans(13, color: green ? successGreen : offWhite, weight: FontWeight.w600)),
+            Text(l, style: bodyText(13, color: softGray)),
+            Text(v, style: bodyText(13, color: green ? successGreen : offWhite, weight: FontWeight.w600)),
           ],
         ),
       );
@@ -258,7 +258,7 @@ class _AnimatedAmountState extends State<_AnimatedAmount>
       animation: _anim,
       builder: (_, __) => Text(
         widget.fmt.format(_anim.value),
-        style: syneBold(40, color: accentGold),
+        style: titleBold(40, color: accentGold),
       ),
     );
   }
@@ -314,14 +314,14 @@ class _OptionCard extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: syneSemi(17)),
-                  Text(amount, style: syneBold(22, color: borderColor)),
+                  Text(title, style: titleSemi(17)),
+                  Text(amount, style: titleBold(22, color: borderColor)),
                 ],
               ),
             ],
           ),
           const SizedBox(height: 10),
-          Text(subtitle, style: dmSans(13, color: subtitleColor ?? softGray)),
+          Text(subtitle, style: bodyText(13, color: subtitleColor ?? softGray)),
           if (warning != null) ...[
             const SizedBox(height: 12),
             Container(
@@ -336,7 +336,7 @@ class _OptionCard extends StatelessWidget {
                 children: [
                   const Icon(Icons.warning_amber_rounded, color: warningRed, size: 18),
                   const SizedBox(width: 8),
-                  Expanded(child: Text(warning!, style: dmSans(12, color: warningRed))),
+                  Expanded(child: Text(warning!, style: bodyText(12, color: warningRed))),
                 ],
               ),
             ),
