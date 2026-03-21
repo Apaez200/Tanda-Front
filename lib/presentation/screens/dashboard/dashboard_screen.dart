@@ -15,14 +15,23 @@ import '../../widgets/custom_button.dart';
 import '../../widgets/participant_ring_widget.dart';
 import '../../widgets/yield_counter_widget.dart';
 
-class DashboardScreen extends StatefulWidget {
+class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  Widget build(BuildContext context) {
+    return const DashboardView();
+  }
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class DashboardView extends StatefulWidget {
+  const DashboardView({super.key});
+
+  @override
+  State<DashboardView> createState() => _DashboardViewState();
+}
+
+class _DashboardViewState extends State<DashboardView> {
   int _tab = 0;
   bool _userDeposited = false;
 
@@ -93,11 +102,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
             setState(() => _tab = i == 3 ? 3 : 0);
           }
         },
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.home_rounded), label: 'Inicio'),
-          NavigationDestination(icon: Icon(Icons.payments_rounded), label: 'Depositar'),
-          NavigationDestination(icon: Icon(Icons.receipt_long_rounded), label: 'Historial'),
-          NavigationDestination(icon: Icon(Icons.person_rounded), label: 'Perfil'),
+        destinations: [
+          const NavigationDestination(icon: Icon(Icons.home_rounded), label: 'Inicio'),
+          const NavigationDestination(
+            icon: Icon(Icons.payments_rounded),
+            label: 'Depositar',
+          ),
+          const NavigationDestination(icon: Icon(Icons.receipt_long_rounded), label: 'Historial'),
+          const NavigationDestination(icon: Icon(Icons.person_rounded), label: 'Perfil'),
         ],
       ),
     );

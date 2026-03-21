@@ -12,19 +12,33 @@ import '../../../data/mock/mock_data.dart';
 import '../../widgets/custom_button.dart';
 import '../../widgets/deposit_slider_widget.dart';
 
-class DepositScreen extends StatefulWidget {
+class DepositScreen extends StatelessWidget {
   const DepositScreen({super.key});
 
   @override
-  State<DepositScreen> createState() => _DepositScreenState();
+  Widget build(BuildContext context) {
+    return const DepositView();
+  }
 }
 
-class _DepositScreenState extends State<DepositScreen> {
+class DepositView extends StatefulWidget {
+  const DepositView({super.key});
+
+  @override
+  State<DepositView> createState() => _DepositViewState();
+}
+
+class _DepositViewState extends State<DepositView> {
   final _fmt = NumberFormat.currency(locale: 'es_MX', symbol: '\$', decimalDigits: 2);
   DepositProjection? _proj;
   bool _loading = false;
 
   final int _todayDay = DateTime.now().day;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   void _onDeposit() async {
     setState(() => _loading = true);

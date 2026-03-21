@@ -47,7 +47,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _connect() async {
     setState(() => _loading = true);
     await Future.delayed(const Duration(milliseconds: 1500));
-    if (mounted) context.go('/dashboard');
+    if (mounted) context.go('/login');
   }
 
   @override

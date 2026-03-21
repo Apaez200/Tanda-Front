@@ -8,14 +8,23 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../widgets/custom_button.dart';
 
-class ClaimScreen extends StatefulWidget {
+class ClaimScreen extends StatelessWidget {
   const ClaimScreen({super.key});
 
   @override
-  State<ClaimScreen> createState() => _ClaimScreenState();
+  Widget build(BuildContext context) {
+    return const ClaimView();
+  }
 }
 
-class _ClaimScreenState extends State<ClaimScreen> {
+class ClaimView extends StatefulWidget {
+  const ClaimView({super.key});
+
+  @override
+  State<ClaimView> createState() => _ClaimViewState();
+}
+
+class _ClaimViewState extends State<ClaimView> {
   late ConfettiController _confetti;
   final _fmt = NumberFormat.currency(locale: 'es_MX', symbol: '\$', decimalDigits: 2);
   bool _loadingClaim = false;

@@ -9,6 +9,7 @@ import '../../presentation/screens/frozen/frozen_screen.dart';
 import '../../presentation/screens/history/history_screen.dart';
 import '../../presentation/screens/onboarding/onboarding_screen.dart';
 import '../../presentation/screens/splash/splash_screen.dart';
+import '../../presentation/screens/login/login_screen.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: '/splash',
@@ -16,6 +17,10 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/splash',
       pageBuilder: (ctx, state) => _fade(const SplashScreen()),
+    ),
+    GoRoute(
+      path: '/login',
+      pageBuilder: (ctx, state) => _fade(const LoginScreen()),
     ),
     GoRoute(
       path: '/onboarding',
