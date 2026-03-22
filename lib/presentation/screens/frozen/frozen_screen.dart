@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
-import '../../../data/mock/mock_data.dart';
 import '../../widgets/countdown_widget.dart';
 import '../../widgets/yield_counter_widget.dart';
 
@@ -70,8 +69,8 @@ class _FrozenScreenState extends State<FrozenScreen>
   @override
   Widget build(BuildContext context) {
     const frozenAmount = 5150.0;
-    // Incremento cada 10s: monto * APY / (86400 / 10)
-    final incPer10s = frozenAmount * mockDailyNetAPY / 8640;
+    const dailyNetAPY = 0.000246;
+    final incPer10s = frozenAmount * dailyNetAPY / 8640;
 
     return Scaffold(
       backgroundColor: darkBg,

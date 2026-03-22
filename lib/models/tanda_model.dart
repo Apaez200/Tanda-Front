@@ -1,3 +1,6 @@
+import '../models/tanda_config_model.dart';
+import '../models/investment_pool_model.dart';
+
 class Tanda {
   const Tanda({
     required this.id,
@@ -20,4 +23,23 @@ class Tanda {
   final double poolTotal;
   final double accumulatedYield;
   final int myTurn;
+
+  factory Tanda.fromContract({
+    required TandaConfig config,
+    required InvestmentPool pool,
+    required int myTurn,
+    required String contractId,
+  }) {
+    return Tanda(
+      id: contractId,
+      name: 'Tanda de los Amigos',
+      amountPerPerson: config.paymentAmountMXN,
+      cutoffDay: 30,
+      currentRound: config.currentRound,
+      totalParticipants: config.maxParticipants,
+      poolTotal: pool.totalUsdcInvestedMXN,
+      accumulatedYield: pool.accumulatedYieldMXN,
+      myTurn: myTurn,
+    );
+  }
 }

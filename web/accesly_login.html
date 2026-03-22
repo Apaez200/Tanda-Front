@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accesly Login</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #060608;
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: #F5F0E8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    #accesly-root {
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+    .status-msg { font-size: 13px; text-align: center; padding: 10px; }
+    .loading { color: #6B6D7B; }
+    .success { color: #0CFFC5; }
+    .error { color: #E74C3C; }
+  </style>
+</head>
+<body>
+  <div id="accesly-root">
+    <p class="status-msg loading" id="status">Cargando Accesly...</p>
+  </div>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "https://esm.sh/react@19.1.0",
+      "react/": "https://esm.sh/react@19.1.0/",
+      "react-dom": "https://esm.sh/react-dom@19.1.0",
+      "react-dom/": "https://esm.sh/react-dom@19.1.0/",
+      "accesly": "https://esm.sh/accesly@0.2.5?external=react,react-dom"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import React from 'react';
+    import ReactDOMClient from 'react-dom/client';
+    import { AcceslyProvider, ConnectButton, useAccesly } from 'accesly';
+
+    const statusEl = document.getElementById('status');
+    const appId = new URLSearchParams(window.location.search).get('appId') || 'acc_d3480b81eb11e101f8709561';
+
+    // ── BroadcastChannel for sign requests (bypasses contentWindow) ──
+    const signChannel = new BroadcastChannel('accesly-tanda-sign');
+
+    let acceslyHookRef = null;
+
+    function SignerBridge() {
+      const accesly = useAccesly();
+
+      React.useEffect(() => {
+        acceslyHookRef = accesly;
+        if (accesly) {
+          const methods = Object.keys(accesly).filter(k => typeof accesly[k] === 'function');
+          console.log('[Accesly] Hook updated, wallet:', accesly.wallet?.stellarAddress, 'methods:', methods);
+        }
+      }, [accesly.wallet, accesly.loading]);
+
+      return null;
+    }
+
+    function App() {
+      const handleConnect = React.useCallback((wallet) => {
+        console.log('[Accesly] Connected:', wallet);
+        // Connection events go via window.parent.postMessage (Flutter listens on window)
+        window.parent.postMessage({
+          type: 'accesly_connected',
+          stellarAddress: wallet.stellarAddress,
+          email: wallet.email || '',
+        }, '*');
+        statusEl.textContent = 'Conectado: ' + wallet.stellarAddress.substring(0, 8) + '...';
+        statusEl.className = 'status-msg success';
+      }, []);
+
+      const handleDisconnect = React.useCallback(() => {
+        acceslyHookRef = null;
+        window.parent.postMessage({ type: 'accesly_disconnected' }, '*');
+        statusEl.textContent = 'Desconectado';
+        statusEl.className = 'status-msg loading';
+      }, []);
+
+      return React.createElement(
+        AcceslyProvider,
+        { appId, network: 'testnet', theme: 'dark', onConnect: handleConnect, onDisconnect: handleDisconnect },
+        React.createElement(SignerBridge),
+        React.createElement(ConnectButton)
+      );
+    }
+
+    // ── Signing logic ────────────────────────────────────────────────
+
+    async function trySign(hookRef, xdr, submit) {
+      const ownKeys = Object.keys(hookRef).filter(k => typeof hookRef[k] === 'function');
+      console.log('[Accesly] Available sign methods:', ownKeys);
+
+      // Try methods in order of preference
+      const methods = submit
+        ? ['signAndSubmit', 'signTransaction', 'sign', 'signXdr']
+        : ['signTransaction', 'sign', 'signXdr'];
+
+      for (const method of methods) {
+        if (typeof hookRef[method] === 'function') {
+          console.log('[Accesly] Calling', method);
+          const result = await Promise.race([
+            hookRef[method](xdr),
+            new Promise((_, rej) => setTimeout(() => rej(new Error(method + ' timeout (80s)')), 80000)),
+          ]);
+          console.log('[Accesly]', method, 'returned:', JSON.stringify(result));
+          return result;
+        }
+      }
+
+      throw new Error('No signing method found. Available: ' + ownKeys.join(', '));
+    }
+
+    // ── Listen for sign requests via BroadcastChannel ────────────────
+    signChannel.addEventListener('message', async (event) => {
+      const data = event.data;
+      if (!data || !data.type) return;
+
+      const isSign = data.type === 'sign_and_submit' || data.type === 'sign_transaction';
+      if (!isSign) return;
+
+      const isSubmit = data.type === 'sign_and_submit';
+      console.log('[Accesly] BroadcastChannel received:', data.type, 'requestId:', data.requestId);
+
+      try {
+        if (!acceslyHookRef) throw new Error('Accesly SDK not initialized');
+        if (!acceslyHookRef.wallet) throw new Error('No wallet connected in Accesly');
+
+        const result = await trySign(acceslyHookRef, data.xdr, isSubmit);
+
+        // Respond via BroadcastChannel
+        signChannel.postMessage({
+          type: 'sign_result',
+          requestId: data.requestId,
+          success: true,
+          signedXdr: result?.signedXdr || result?.xdr || result?.signed || '',
+          txHash: result?.txHash || result?.hash || '',
+        });
+      } catch (e) {
+        console.error('[Accesly] Sign error:', e);
+        signChannel.postMessage({
+          type: 'sign_result',
+          requestId: data.requestId,
+          success: false,
+          error: e.message || String(e),
+        });
+      }
+    });
+
+    // ── Boot ─────────────────────────────────────────────────────────
+    try {
+      const root = ReactDOMClient.createRoot(document.getElementById('accesly-root'));
+      root.render(React.createElement(App));
+      statusEl.textContent = '';
+      console.log('[Accesly] iframe booted, BroadcastChannel ready');
+    } catch (e) {
+      statusEl.textContent = 'Error: ' + e.message;
+      statusEl.className = 'status-msg error';
+      console.error('[Accesly] Init error:', e);
+    }
+  </script>
+</body>
+</html>

@@ -16,16 +16,12 @@ class ExitScreen extends StatelessWidget {
     final safeDateStr = '${safeDate.day}/${safeDate.month}/${safeDate.year}';
 
     // Determinar penalización según el día del mes
-    final String penCategory;
     final String penDesc;
     if (today <= 15) {
-      penCategory = 'Menos de 15 días de aviso';
       penDesc = '15% = -\$150';
     } else if (today <= 30) {
-      penCategory = '15-30 días de aviso';
       penDesc = '10% = -\$100';
     } else {
-      penCategory = '1-2 meses de aviso';
       penDesc = '5% = -\$50';
     }
 
