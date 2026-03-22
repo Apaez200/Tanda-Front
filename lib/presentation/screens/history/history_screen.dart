@@ -1,9 +1,10 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
+import '../../../core/constants/contract_constants.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../data/mock/mock_state.dart';
 import '../../../injection.dart';
 import '../../../models/investment_pool_model.dart';
 import '../../../models/participant_info_model.dart';
@@ -31,6 +32,21 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   Future<void> _loadHistory() async {
     try {
+      if (ContractConstants.useMock) {
+        // Read directly from the single source of truth
+        final s = MockState.instance;
+        if (mounted) {
+          setState(() {
+            _transactions = s.userTransactions;
+            _totalYield = s.accumulatedYield;
+            _roundsParticipated = s.userRoundsPaid;
+            _isLoading = false;
+          });
+        }
+        return;
+      }
+
+      // Real blockchain path
       final myAddress = await walletRepository.getConnectedPublicKey();
       if (myAddress == null) {
         setState(() => _isLoading = false);
@@ -45,12 +61,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
       final participant = results[0] as ParticipantInfo;
       final pool = results[1] as InvestmentPool;
-      // config available at results[2] if needed in future
 
       final transactions = <Transaction>[];
-      final fmt = DateFormat('dd MMM yyyy', 'es');
 
-      // Build transaction history from participant data
       if (participant.totalPaid > 0) {
         transactions.add(Transaction(
           type: 'deposit',
@@ -64,7 +77,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
         transactions.add(Transaction(
           type: 'yield',
           amount: pool.accumulatedYieldMXN,
-          date: fmt.format(DateTime.now()),
+          date: 'Acumulado',
           description: 'Rendimiento acumulado CETES',
         ));
       }
@@ -99,9 +112,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
     } on TandaException catch (e) {
       debugPrint('[History] TandaException: ${e.error.userMessage}');
       if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
+        setState(() => _isLoading = false);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: const Color(0xFF1A1A1A),
@@ -217,7 +228,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       itemBuilder: (ctx, i) {
                         final t = _transactions[i];
                         return FadeInUp(
-                          delay: Duration(milliseconds: i * 80),
+                          delay: Duration(milliseconds: i * 60),
                           child: _TransactionTile(transaction: t),
                         );
                       },
@@ -248,39 +259,34 @@ class _TransactionTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: info.color.withOpacity(0.2)),
       ),
-      child: Column(
+      child: Row(
         children: [
-          Row(
-            children: [
-              Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: info.color.withOpacity(0.15),
-                ),
-                child: Icon(info.icon, color: info.color, size: 22),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(transaction.description,
-                        style:
-                            bodyText(14, weight: FontWeight.w600)),
-                    const SizedBox(height: 2),
-                    Text(transaction.date,
-                        style: bodyText(12, color: softGray)),
-                  ],
-                ),
-              ),
-              Text(
-                '${positive ? '+' : ''}\$${transaction.amount.abs().toStringAsFixed(2)}',
-                style: titleSemi(15,
-                    color: positive ? successGreen : warningRed),
-              ),
-            ],
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: info.color.withOpacity(0.15),
+            ),
+            child: Icon(info.icon, color: info.color, size: 22),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(transaction.description,
+                    style: bodyText(14, weight: FontWeight.w600)),
+                const SizedBox(height: 2),
+                Text(transaction.date,
+                    style: bodyText(12, color: softGray)),
+              ],
+            ),
+          ),
+          Text(
+            '${positive ? '+' : ''}\$${transaction.amount.abs().toStringAsFixed(2)}',
+            style: titleSemi(15,
+                color: positive ? successGreen : warningRed),
           ),
         ],
       ),
@@ -295,6 +301,8 @@ class _TransactionTile extends StatelessWidget {
         return _TxInfo(Icons.emoji_events_rounded, accentGold);
       case 'frozen':
         return _TxInfo(Icons.lock_rounded, Colors.lightBlue);
+      case 'cetes_retention':
+        return _TxInfo(Icons.account_balance_rounded, accentGold);
       default:
         return _TxInfo(Icons.payments_rounded, warningRed);
     }

@@ -29,10 +29,11 @@ class Tanda {
     required InvestmentPool pool,
     required int myTurn,
     required String contractId,
+    String? savedName,
   }) {
     return Tanda(
       id: contractId,
-      name: 'Tanda de los Amigos',
+      name: savedName ?? 'Rendix del Equipo',
       amountPerPerson: config.paymentAmountMXN,
       cutoffDay: 30,
       currentRound: config.currentRound,

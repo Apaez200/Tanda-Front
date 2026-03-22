@@ -8,7 +8,6 @@ import 'package:stellar_flutter_sdk/stellar_flutter_sdk.dart';
 
 import '../../../core/constants/contract_constants.dart';
 import '../../../core/prototype_state.dart';
-import '../../../data/implementations/soroban/soroban_wallet_repository.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../data/services/accesly_service.dart';
@@ -117,19 +116,6 @@ class _LoginScreenState extends State<LoginScreen>
       await walletRepository.saveKeypair(publicKey, secretKey);
       walletPublicKeyNotifier.value = publicKey;
 
-      // Establish USDC trustline so the account can hold USDC
-      if (walletRepository is SorobanWalletRepository) {
-        setState(() => _statusText = 'Configurando USDC...');
-        final sorobanWallet = walletRepository as SorobanWalletRepository;
-        await sorobanWallet.ensureUsdcTrustline(signerSecretKey: secretKey);
-
-        // Mint testnet USDC if faucet key is configured
-        if (ContractConstants.usdcFaucetSecret.isNotEmpty) {
-          setState(() => _statusText = 'Enviando USDC de prueba...');
-          await sorobanWallet.mintTestnetUsdc(recipientPublicKey: publicKey);
-        }
-      }
-
       if (mounted) context.go('/hub');
     } catch (e) {
       if (mounted) {
@@ -145,8 +131,8 @@ class _LoginScreenState extends State<LoginScreen>
 
   void _importAccount() async {
     final secret = _secretController.text.trim();
-    if (secret.isEmpty || !secret.startsWith('S')) {
-      _showSnack('La clave no es válida, revísala', warningRed);
+    if (secret.isEmpty) {
+      _showSnack('Ingresa tu clave de acceso', warningRed);
       return;
     }
 
@@ -157,9 +143,15 @@ class _LoginScreenState extends State<LoginScreen>
     });
 
     try {
-      // Derive the correct public key from the imported secret key
-      final keyPair = KeyPair.fromSecretSeed(secret);
-      final publicKey = keyPair.accountId;
+      String publicKey;
+      if (ContractConstants.useMock) {
+        // In mock mode, accept any string as valid credential
+        publicKey = 'GDTZQTGPOBXU4AA2U3HEQ7RPRBGXKUEZQSAXEGTLSM2CC45BPJLJOB6W';
+      } else {
+        // Derive the correct public key from the imported secret key
+        final keyPair = KeyPair.fromSecretSeed(secret);
+        publicKey = keyPair.accountId;
+      }
       await walletRepository.saveKeypair(publicKey, secret);
       walletPublicKeyNotifier.value = publicKey;
 
@@ -199,17 +191,6 @@ class _LoginScreenState extends State<LoginScreen>
     try {
       walletPublicKeyNotifier.value = wallet.stellarAddress;
       await walletRepository.saveKeypair(wallet.stellarAddress, '');
-
-      // Fund account if needed (FriendBot) and setup USDC trustline via Accesly
-      if (walletRepository is SorobanWalletRepository) {
-        final sorobanWallet = walletRepository as SorobanWalletRepository;
-
-        setState(() => _statusText = 'Fondeando cuenta...');
-        await walletRepository.fundTestnetAccount(wallet.stellarAddress);
-
-        setState(() => _statusText = 'Configurando USDC...');
-        await sorobanWallet.ensureUsdcTrustlineViaAccesly();
-      }
 
       if (mounted) {
         setState(() {
@@ -341,7 +322,7 @@ class _LoginScreenState extends State<LoginScreen>
                         colors: [offWhite, accentGold],
                       ).createShader(bounds),
                       child: Text(
-                        'TandaChain',
+                        'Rendix',
                         style: titleBold(34, color: offWhite),
                         textAlign: TextAlign.center,
                       ),
@@ -352,7 +333,7 @@ class _LoginScreenState extends State<LoginScreen>
                     duration: const Duration(milliseconds: 600),
                     delay: const Duration(milliseconds: 100),
                     child: Text(
-                      'Ahorra en grupo, gana rendimientos.\nTu dinero seguro en la blockchain.',
+                      'Invierte en grupo, gana rendimientos.\nTu dinero seguro en la blockchain.',
                       style: bodyText(15, color: const Color(0xFF6B6D7B)),
                       textAlign: TextAlign.center,
                     ),
@@ -440,7 +421,7 @@ class _LoginScreenState extends State<LoginScreen>
                                         color: const Color(0xFF6B6D7B))),
                                 const SizedBox(height: 4),
                                 Text(
-                                    'Pega la clave que recibiste al crear tu cuenta.',
+                                    'Ingresa cualquier texto para acceder.',
                                     style: bodyText(11,
                                         color: const Color(0xFF4A4B55))),
                                 const SizedBox(height: 12),

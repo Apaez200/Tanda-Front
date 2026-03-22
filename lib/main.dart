@@ -20,16 +20,16 @@ void main() {
     AcceslyService().registerViewFactory();
   }
 
-  runApp(const TandaChainApp());
+  runApp(const RendixApp());
 }
 
-class TandaChainApp extends StatelessWidget {
-  const TandaChainApp({super.key});
+class RendixApp extends StatelessWidget {
+  const RendixApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'TandaChain',
+      title: 'Rendix',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
       routerConfig: appRouter,

@@ -1,12 +1,9 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import '../../../core/constants/contract_constants.dart';
-import '../../../data/implementations/soroban/soroban_wallet_repository.dart';
-import '../../../data/services/accesly_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../data/services/tanda_storage_service.dart';
@@ -87,11 +84,74 @@ class _JoinTandaScreenState extends State<JoinTandaScreen> {
   // En producción, estos datos vendrían de un indexer on-chain
   final _availableTandas = <_DiscoverableTanda>[
     _DiscoverableTanda(
-      name: 'Tanda Amigos CDMX',
+      name: 'Rendix Amigos CDMX',
       contractId: ContractConstants.tandaContractId,
       participants: 3,
       maxParticipants: 5,
       paymentAmount: 1000,
+      period: 'Mensual',
+      category: 'Mensual',
+    ),
+    const _DiscoverableTanda(
+      name: 'Rendix Express Semanal',
+      contractId: 'MOCK_CONTRACT_EXPRESS_001',
+      participants: 4,
+      maxParticipants: 8,
+      paymentAmount: 500,
+      period: 'Semanal',
+      category: 'Semanal',
+    ),
+    const _DiscoverableTanda(
+      name: 'Rendix Quincenal Premium',
+      contractId: 'MOCK_CONTRACT_PREMIUM_001',
+      participants: 2,
+      maxParticipants: 6,
+      paymentAmount: 2500,
+      period: 'Quincenal',
+      category: 'Quincenal',
+    ),
+    const _DiscoverableTanda(
+      name: 'Rendix Familiar GDL',
+      contractId: 'MOCK_CONTRACT_GDL_001',
+      participants: 5,
+      maxParticipants: 5,
+      paymentAmount: 1000,
+      period: 'Mensual',
+      category: 'Mensual',
+    ),
+    const _DiscoverableTanda(
+      name: 'Rendix Universitarios',
+      contractId: 'MOCK_CONTRACT_UNI_001',
+      participants: 3,
+      maxParticipants: 10,
+      paymentAmount: 300,
+      period: 'Semanal',
+      category: 'Semanal',
+    ),
+    const _DiscoverableTanda(
+      name: 'Rendix Vecinos MTY',
+      contractId: 'MOCK_CONTRACT_MTY_001',
+      participants: 4,
+      maxParticipants: 7,
+      paymentAmount: 1500,
+      period: 'Quincenal',
+      category: 'Quincenal',
+    ),
+    const _DiscoverableTanda(
+      name: 'Rendix Ahorro Navideño',
+      contractId: 'MOCK_CONTRACT_NAVIDAD_001',
+      participants: 6,
+      maxParticipants: 12,
+      paymentAmount: 2000,
+      period: 'Mensual',
+      category: 'Mensual',
+    ),
+    const _DiscoverableTanda(
+      name: 'Rendix Tech Workers',
+      contractId: 'MOCK_CONTRACT_TECH_001',
+      participants: 1,
+      maxParticipants: 5,
+      paymentAmount: 5000,
       period: 'Mensual',
       category: 'Mensual',
     ),
@@ -166,7 +226,7 @@ class _JoinTandaScreenState extends State<JoinTandaScreen> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        _showSnackBar('No se pudo cargar la tanda', warningRed);
+        _showSnackBar('No se pudo cargar el grupo', warningRed);
       }
     }
   }
@@ -232,7 +292,7 @@ class _JoinTandaScreenState extends State<JoinTandaScreen> {
               ),
             ),
             const SizedBox(width: 8),
-            Text('Unirse a Tanda', style: titleSemi(18, color: offWhite)),
+            Text('Unirse a Grupo', style: titleSemi(18, color: offWhite)),
           ],
         ),
         actions: [
@@ -247,8 +307,8 @@ class _JoinTandaScreenState extends State<JoinTandaScreen> {
               size: 22,
             ),
             tooltip: _showContractSearch
-                ? 'Ver tandas disponibles'
-                : 'Buscar por Contract ID',
+                ? 'Ver grupos disponibles'
+                : 'Buscar por código',
           ),
         ],
       ),
@@ -341,7 +401,7 @@ class _JoinTandaScreenState extends State<JoinTandaScreen> {
                                 child: CircularProgressIndicator(
                                     strokeWidth: 2, color: _bg),
                               )
-                            : Text('Buscar tanda',
+                            : Text('Buscar grupo',
                                 style: bodyText(15,
                                     color: _bg,
                                     weight: FontWeight.w700)),
@@ -387,7 +447,7 @@ class _JoinTandaScreenState extends State<JoinTandaScreen> {
                       style: bodyText(14, color: offWhite),
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        hintText: 'Buscar tandas...',
+                        hintText: 'Buscar grupos...',
                         hintStyle:
                             bodyText(14, color: const Color(0xFF3A3C48)),
                       ),
@@ -464,7 +524,7 @@ class _JoinTandaScreenState extends State<JoinTandaScreen> {
           child: Row(
             children: [
               Text(
-                  '${filtered.length} tanda${filtered.length == 1 ? '' : 's'}',
+                  '${filtered.length} grupo${filtered.length == 1 ? '' : 's'}',
                   style: bodyText(12,
                       color: const Color(0xFF6B6D7B),
                       weight: FontWeight.w500)),
@@ -490,7 +550,7 @@ class _JoinTandaScreenState extends State<JoinTandaScreen> {
                       const Icon(Icons.search_off_rounded,
                           color: Color(0xFF3A3C48), size: 40),
                       const SizedBox(height: 12),
-                      Text('No se encontraron tandas',
+                      Text('No se encontraron grupos',
                           style: bodyText(14, color: softGray)),
                       const SizedBox(height: 4),
                       Text('Intenta con otro filtro o busca por codigo',
@@ -685,11 +745,8 @@ class _TandaDetailSheetState extends State<_TandaDetailSheet> {
 
     try {
       final secretKey = await walletRepository.getSavedSecretKey() ?? '';
-      final hasAccesly = kIsWeb && AcceslyService().isConnected;
-      debugPrint(
-          '[REGISTER-SHEET] secretKey: ${secretKey.isNotEmpty}, accesly: $hasAccesly');
 
-      if (secretKey.isEmpty && !hasAccesly) {
+      if (secretKey.isEmpty) {
         setState(() {
           _registering = false;
           _error = 'Conecta tu wallet primero';
@@ -697,20 +754,7 @@ class _TandaDetailSheetState extends State<_TandaDetailSheet> {
         return;
       }
 
-      // Step 1: USDC Trustline
-      if (walletRepository is SorobanWalletRepository) {
-        if (secretKey.isNotEmpty) {
-          debugPrint('[REGISTER-SHEET] Creando trustline USDC (local)...');
-          await (walletRepository as SorobanWalletRepository)
-              .ensureUsdcTrustline(signerSecretKey: secretKey);
-        } else if (hasAccesly) {
-          debugPrint('[REGISTER-SHEET] Creando trustline USDC (Accesly)...');
-          await (walletRepository as SorobanWalletRepository)
-              .ensureUsdcTrustlineViaAccesly();
-        }
-      }
-
-      // Step 2: Register on contract
+      // Register on contract
       debugPrint('[REGISTER-SHEET] Llamando register()...');
       setActiveTandaContract(widget.contractId);
       final txHash =
@@ -720,7 +764,7 @@ class _TandaDetailSheetState extends State<_TandaDetailSheet> {
       // Step 3: Save locally
       await tandaStorage.saveTanda(SavedTanda(
         contractId: widget.contractId,
-        name: 'Tanda de Ahorro',
+        name: 'Grupo de Inversión',
         role: 'member',
         joinedAt: DateTime.now(),
       ));
@@ -818,7 +862,7 @@ class _TandaDetailSheetState extends State<_TandaDetailSheet> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Tanda de Ahorro', style: titleSemi(18)),
+                        Text('Grupo de Inversión', style: titleSemi(18)),
                         const SizedBox(height: 4),
                         _StatusTag(status: config.status),
                       ],
@@ -962,7 +1006,7 @@ class _TandaDetailSheetState extends State<_TandaDetailSheet> {
                 const SizedBox(height: 16),
               ],
 
-              // Proof of funds notice
+              // Initial payment notice (10% of first payment)
               if (!widget.alreadyRegistered &&
                   config.status == TandaStatus.registering &&
                   spots > 0)
@@ -974,17 +1018,36 @@ class _TandaDetailSheetState extends State<_TandaDetailSheet> {
                     border: Border.all(
                         color: accentGold.withValues(alpha: 0.15)),
                   ),
-                  child: Row(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.info_outline,
-                          color: accentGold, size: 16),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: Text(
-                          'Requisito: balance minimo de ${widget.fmt.format(paymentMXN * 2)} USDC.',
-                          style: bodyText(12, color: accentGold),
-                        ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.info_outline,
+                              color: accentGold, size: 16),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              'Pago inicial requerido: ${widget.fmt.format(paymentMXN * 0.10)} USDC (10% del primer pago)',
+                              style: bodyText(12, color: accentGold),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          const Icon(Icons.account_balance_rounded,
+                              color: accentGold, size: 14),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Este monto se usa como garantía y se invierte en CETES.',
+                              style: bodyText(11, color: const Color(0xFF6B6D7B)),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -1032,7 +1095,7 @@ class _TandaDetailSheetState extends State<_TandaDetailSheet> {
                       ? _GradientButton(
                           label: _registering
                               ? 'Registrando...'
-                              : 'Registrarme en esta Tanda',
+                              : 'Registrarme en este grupo',
                           colors: _registering
                               ? const [Color(0xFF3A3C48), Color(0xFF2A2B35)]
                               : const [_mint, Color(0xFF08B88E)],
@@ -1128,7 +1191,7 @@ class _AvailabilityBanner extends StatelessWidget {
     final text = available
         ? '$spots ${spots == 1 ? "lugar disponible" : "lugares disponibles"}'
         : status != TandaStatus.registering
-            ? 'Esta tanda ya no acepta registros'
+            ? 'Este grupo ya no acepta registros'
             : 'No hay lugares disponibles';
 
     return Container(

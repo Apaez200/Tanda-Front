@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../core/constants/contract_constants.dart';
 import '../../../core/prototype_state.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
@@ -58,6 +59,32 @@ class _TandaHubScreenState extends State<TandaHubScreen>
     int balance = 0;
     if (addr != null) {
       balance = await walletRepository.getUsdcBalance(addr);
+    }
+
+    // In mock mode, pre-populate demo tandas on first load
+    if (ContractConstants.useMock) {
+      final existing = await tandaStorage.getSavedTandas();
+      if (existing.isEmpty) {
+        // Tanda principal: 10 personas, ronda 7 de 10
+        await tandaStorage.saveTanda(SavedTanda(
+          contractId: ContractConstants.tandaContractId,
+          name: 'Rendix del Equipo',
+          role: 'admin',
+          joinedAt: DateTime.now().subtract(const Duration(days: 210)),
+        ));
+        await tandaStorage.saveTanda(SavedTanda(
+          contractId: 'MOCK_CONTRACT_FAMILIA_001',
+          name: 'Rendix Familiar',
+          role: 'member',
+          joinedAt: DateTime.now().subtract(const Duration(days: 120)),
+        ));
+        await tandaStorage.saveTanda(SavedTanda(
+          contractId: 'MOCK_CONTRACT_OFICINA_001',
+          name: 'Rendix de la Oficina',
+          role: 'member',
+          joinedAt: DateTime.now().subtract(const Duration(days: 90)),
+        ));
+      }
     }
 
     final saved = await tandaStorage.getSavedTandas();
@@ -264,7 +291,7 @@ class _TandaHubScreenState extends State<TandaHubScreen>
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('TandaChain',
+                              Text('Rendix',
                                   style: titleBold(20, color: offWhite)),
                               Text('Stellar Testnet',
                                   style: bodyText(11,
@@ -434,14 +461,15 @@ class _TandaHubScreenState extends State<TandaHubScreen>
                               icon: Icons.account_balance_wallet_rounded,
                               label: 'Depositar',
                               color: _mint,
-                              onTap: () {
+                              onTap: () async {
                                 if (_activeTandas.isEmpty) {
                                   _showSnack(
-                                      'Primero crea o unete a una tanda');
+                                      'Primero crea o únete a un grupo');
                                 } else if (_activeTandas.length == 1) {
                                   setActiveTandaContract(
                                       _activeTandas.first.saved.contractId);
-                                  context.push('/deposit');
+                                  await context.push('/deposit');
+                                  _loadAll(); // Refresh after deposit
                                 } else {
                                   _showSelectTandaForDeposit(context);
                                 }
@@ -483,7 +511,7 @@ class _TandaHubScreenState extends State<TandaHubScreen>
                       delay: const Duration(milliseconds: 200),
                       child: Row(
                         children: [
-                          Text('Mis tandas',
+                          Text('Mis inversiones',
                               style: titleSemi(18, color: offWhite)),
                           const Spacer(),
                           if (_activeTandas.isNotEmpty)
@@ -525,10 +553,11 @@ class _TandaHubScreenState extends State<TandaHubScreen>
                             delay: Duration(milliseconds: 250 + i * 80),
                             child: _TandaListItem(
                               preview: t,
-                              onTap: () {
+                              onTap: () async {
                                 setActiveTandaContract(
                                     t.saved.contractId);
-                                context.push('/dashboard');
+                                await context.push('/dashboard');
+                                _loadAll();
                               },
                             ),
                           ),
@@ -569,10 +598,11 @@ class _TandaHubScreenState extends State<TandaHubScreen>
                           child: _TandaListItem(
                             preview: t,
                             completed: true,
-                            onTap: () {
+                            onTap: () async {
                               setActiveTandaContract(
                                   t.saved.contractId);
-                              context.push('/dashboard');
+                              await context.push('/dashboard');
+                              _loadAll();
                             },
                           ),
                         );
@@ -624,7 +654,7 @@ class _TandaHubScreenState extends State<TandaHubScreen>
               ),
             ),
             const SizedBox(height: 20),
-            Text('Selecciona una tanda',
+            Text('Selecciona un grupo',
                 style: titleSemi(16, color: offWhite)),
             const SizedBox(height: 16),
             ...List.generate(_activeTandas.length, (i) {
@@ -970,11 +1000,11 @@ class _EmptyTandas extends StatelessWidget {
           const Icon(Icons.savings_outlined,
               color: Color(0xFF3A3C48), size: 36),
           const SizedBox(height: 12),
-          Text('Aun no tienes tandas',
+          Text('Aun no tienes inversiones',
               style: titleSemi(15, color: softGray)),
           const SizedBox(height: 4),
           Text(
-            'Crea una tanda o unete a una para empezar a ahorrar en grupo.',
+            'Crea un grupo o únete a uno para empezar a invertir.',
             style: bodyText(12, color: const Color(0xFF4A4B55)),
             textAlign: TextAlign.center,
           ),

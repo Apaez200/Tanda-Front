@@ -56,7 +56,7 @@ class _CreateTandaScreenState extends State<CreateTandaScreen> {
   Future<void> _createTanda() async {
     setState(() {
       _isCreating = true;
-      _statusText = 'Creando tu tanda...';
+      _statusText = 'Creando tu grupo...';
     });
 
     // Simulate creation delay (the contract is already deployed on testnet)
@@ -68,7 +68,7 @@ class _CreateTandaScreenState extends State<CreateTandaScreen> {
     // Use the existing deployed contract for this prototype
     final contractId = ContractConstants.tandaContractId;
     final name =
-        'Tanda ${_fmt.format(_paymentAmount)} x $_maxParticipants';
+        'Grupo ${_fmt.format(_paymentAmount)} x $_maxParticipants';
 
     await tandaStorage.saveTanda(SavedTanda(
       contractId: contractId,
@@ -132,7 +132,7 @@ class _CreateTandaScreenState extends State<CreateTandaScreen> {
             ),
             const SizedBox(height: 20),
 
-            Text('Tu tanda está lista',
+            Text('Tu grupo está listo',
                 style: titleBold(22, color: _mint)),
             const SizedBox(height: 8),
             Text(
@@ -168,7 +168,7 @@ class _CreateTandaScreenState extends State<CreateTandaScreen> {
               onTap: () {
                 Clipboard.setData(ClipboardData(
                     text:
-                        'Únete a mi tanda en TandaChain! Código: $contractId'));
+                        'Únete a mi grupo en Rendix! Código: $contractId'));
                 ScaffoldMessenger.of(parentContext).showSnackBar(
                   SnackBar(
                     backgroundColor: _cardColor,
@@ -220,7 +220,7 @@ class _CreateTandaScreenState extends State<CreateTandaScreen> {
                   ),
                 ),
                 child: Center(
-                  child: Text('Ver mi tanda',
+                  child: Text('Ver mi grupo',
                       style: bodyText(15,
                           color: _bg, weight: FontWeight.w700)),
                 ),
@@ -255,7 +255,7 @@ class _CreateTandaScreenState extends State<CreateTandaScreen> {
               ),
             ),
             const SizedBox(width: 8),
-            Text('Crear Tanda', style: titleSemi(18, color: offWhite)),
+            Text('Crear Grupo', style: titleSemi(18, color: offWhite)),
           ],
         ),
       ),
@@ -526,7 +526,7 @@ class _CreateTandaScreenState extends State<CreateTandaScreen> {
                                 const Icon(Icons.auto_awesome_rounded,
                                     color: accentGold, size: 16),
                                 const SizedBox(width: 8),
-                                Text('Así funciona tu tanda',
+                                Text('Así funciona tu grupo',
                                     style: bodyText(13,
                                         color: accentGold,
                                         weight: FontWeight.w600)),
@@ -575,7 +575,7 @@ class _CreateTandaScreenState extends State<CreateTandaScreen> {
                             const SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                'Cada turno, todos aportan y una persona recibe todo el dinero. Mientras no te toca, tu dinero genera rendimientos.',
+                                'Cada turno, todos aportan y una persona recibe el dinero. Mientras tanto, tu inversión genera rendimientos en CETES.',
                                 style: bodyText(12,
                                     color: const Color(0xFF6B6D7B)),
                               ),
@@ -665,7 +665,7 @@ class _CreateTandaScreenState extends State<CreateTandaScreen> {
                                     color: _bg,
                                     size: 18),
                                 const SizedBox(width: 8),
-                                Text('Crear mi tanda',
+                                Text('Crear mi grupo',
                                     style: bodyText(16,
                                         color: _bg,
                                         weight: FontWeight.w700)),

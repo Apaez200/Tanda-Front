@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/constants/contract_constants.dart';
-import '../../../data/implementations/soroban/soroban_wallet_repository.dart';
 import '../../../core/prototype_state.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
@@ -199,7 +198,7 @@ class _DashboardViewState extends State<DashboardView> {
             }
           },
         ),
-        title: Text('TandaChain', style: titleBold(22, color: accentGold)),
+        title: Text('Rendix', style: titleBold(22, color: accentGold)),
         actions: [
           if (_config?.status == TandaStatus.active && _roundInfo != null)
             Tooltip(
@@ -247,9 +246,10 @@ class _DashboardViewState extends State<DashboardView> {
         backgroundColor: cardBg,
         indicatorColor: primaryGreen.withOpacity(0.35),
         selectedIndex: _tab,
-        onDestinationSelected: (i) {
+        onDestinationSelected: (i) async {
           if (i == 1) {
-            context.push('/deposit');
+            await context.push('/deposit');
+            _loadData(); // Refresh after deposit
           } else if (i == 2) {
             context.push('/history');
           } else {
@@ -377,7 +377,10 @@ class _DashboardViewState extends State<DashboardView> {
                     child: _UserStatusCard(
                       deposited: userDeposited,
                       registered: _myInfo != null,
-                      onDeposit: () => context.push('/deposit'),
+                      onDeposit: () async {
+                        await context.push('/deposit');
+                        _loadData();
+                      },
                       onRegister: _registerInTanda,
                       fmt: _fmt,
                       amount: tanda.amountPerPerson,
@@ -391,7 +394,7 @@ class _DashboardViewState extends State<DashboardView> {
                     child: TextButton.icon(
                       icon: const Icon(Icons.exit_to_app,
                           size: 16, color: softGray),
-                      label: Text('Salir de la tanda',
+                      label: Text('Salir del grupo',
                           style: bodyText(13, color: softGray)),
                       onPressed: () => context.push('/exit'),
                     ),
@@ -422,11 +425,6 @@ class _DashboardViewState extends State<DashboardView> {
     }
 
     try {
-      // Asegurar trustline USDC antes de registrar
-      if (walletRepository is SorobanWalletRepository) {
-        await (walletRepository as SorobanWalletRepository)
-            .ensureUsdcTrustline(signerSecretKey: secretKey);
-      }
       await tandaRepository.register(signerSecretKey: secretKey);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -664,6 +662,7 @@ class _UserStatusCard extends StatelessWidget {
   Widget build(BuildContext context) {
     // Not registered yet
     if (!registered && status == TandaStatus.registering) {
+      final initialPayment = amount * 0.10;
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -674,11 +673,31 @@ class _UserStatusCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Aún no estás registrado en esta tanda',
+            Text('Aún no estás registrado en este grupo',
                 style: bodyText(14, color: softGray)),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: accentGold.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.info_outline, color: accentGold, size: 16),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Pago inicial: ${fmt.format(initialPayment)} (10% del primer pago)',
+                      style: bodyText(12, color: accentGold),
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(height: 12),
             CustomButton(
-              label: 'Registrarme en la tanda',
+              label: 'Registrarme (${fmt.format(initialPayment)})',
               onPressed: onRegister,
               variant: CustomButtonVariant.primary,
               fullWidth: true,
@@ -731,9 +750,29 @@ class _UserStatusCard extends StatelessWidget {
         children: [
           Text('Aún no has depositado esta ronda',
               style: bodyText(14, color: softGray)),
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: accentGold.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.account_balance_rounded, color: accentGold, size: 14),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    '10% de tu depósito se invierte en CETES',
+                    style: bodyText(11, color: accentGold),
+                  ),
+                ),
+              ],
+            ),
+          ),
           const SizedBox(height: 12),
           CustomButton(
-            label: 'Depositar ${fmt.format(amount)} ahora',
+            label: 'Depositar ahora',
             onPressed: onDeposit,
             variant: CustomButtonVariant.primary,
             fullWidth: true,

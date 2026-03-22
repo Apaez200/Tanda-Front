@@ -38,5 +38,5 @@ class ContractConstants {
   // ── Feature flag ────────────────────────────────────────────────────────
   /// true  → usa MockRepository (datos hardcodeados, sin red)
   /// false → usa SorobanRepository (Stellar Testnet real)
-  static const bool useMock = false;
+  static const bool useMock = true;
 }

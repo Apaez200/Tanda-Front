@@ -2,17 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tandachain/main.dart';
 
 void main() {
-  testWidgets('TandaChain app smoke test — renders splash', (WidgetTester tester) async {
-    // Build the app
-    await tester.pumpWidget(const TandaChainApp());
-
-    // Pump a few frames to let animations initialize
+  testWidgets('Rendix app smoke test — renders splash', (WidgetTester tester) async {
+    await tester.pumpWidget(const RendixApp());
     await tester.pump(const Duration(milliseconds: 100));
-
-    // The splash screen should show the brand name
-    expect(find.textContaining('TandaChain'), findsWidgets);
-
-    // Settle all pending timers and animations
+    expect(find.textContaining('Rendix'), findsWidgets);
     await tester.pumpAndSettle(const Duration(seconds: 5));
   });
 }

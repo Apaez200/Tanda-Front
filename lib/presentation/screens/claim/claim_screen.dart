@@ -41,6 +41,7 @@ class _ClaimViewState extends State<ClaimView> {
   double _poolAmount = 0;
   double _yieldAmount = 0;
   double _collateralReserved = 0;
+  double _cetesRetention = 0; // 10% retenido para inversión CETES
   double _claimableNow = 0;
 
   @override
@@ -68,7 +69,8 @@ class _ClaimViewState extends State<ClaimView> {
       final yield_ = pool.accumulatedYieldMXN;
       final collateral = paymentPerPerson * 0.10; // 10% collateral
       final available = totalPool + yield_;
-      final claimable = available - collateral;
+      final cetesRetain = available * 0.10; // 10% del total se invierte en CETES
+      final claimable = available - collateral - cetesRetain;
 
       if (mounted) {
         setState(() {
@@ -76,6 +78,7 @@ class _ClaimViewState extends State<ClaimView> {
           _poolAmount = totalPool;
           _yieldAmount = yield_;
           _collateralReserved = collateral;
+          _cetesRetention = cetesRetain;
           _claimableNow = claimable;
           _isLoading = false;
         });
@@ -141,6 +144,11 @@ class _ClaimViewState extends State<ClaimView> {
               Text(
                   '${_fmt.format(_collateralReserved)} reservados como colateral',
                   style: bodyText(13, color: softGray),
+                  textAlign: TextAlign.center),
+              const SizedBox(height: 4),
+              Text(
+                  '${_fmt.format(_cetesRetention)} invertidos en CETES fijos',
+                  style: bodyText(13, color: accentGold),
                   textAlign: TextAlign.center),
               const SizedBox(height: 8),
               SelectableText(
@@ -339,6 +347,8 @@ class _ClaimViewState extends State<ClaimView> {
                         _desglose('Tu rendimiento extra:',
                             '+${_fmt.format(_yieldAmount)}',
                             green: true),
+                        _desglose('Inversión CETES fijos:',
+                            '-${_fmt.format(_cetesRetention)}'),
                       ],
                     ),
                   ),
@@ -355,7 +365,7 @@ class _ClaimViewState extends State<ClaimView> {
                     title: 'Cobrar ahora',
                     amount: _fmt.format(_claimableNow),
                     subtitle:
-                        '${_fmt.format(_collateralReserved)} se quedan como colateral',
+                        '${_fmt.format(_collateralReserved)} colateral · ${_fmt.format(_cetesRetention)} a CETES',
                     buttonLabel: 'Cobrar ${_fmt.format(_claimableNow)}',
                     buttonVariant: CustomButtonVariant.secondary,
                     loading: _loadingClaim,

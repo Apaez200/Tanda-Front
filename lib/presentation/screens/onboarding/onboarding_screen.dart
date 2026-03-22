@@ -23,8 +23,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final _slides = const [
     _Slide(
       emoji: '📦',
-      title: 'Tu tanda digital',
-      subtitle: 'Ahorra con tu grupo de siempre, pero ahora tu dinero no duerme',
+      title: 'Tu inversión digital',
+      subtitle: 'Invierte con tu grupo de siempre, tu dinero nunca duerme',
     ),
     _Slide(
       emoji: '📈',

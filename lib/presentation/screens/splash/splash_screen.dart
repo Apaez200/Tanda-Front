@@ -101,7 +101,7 @@ class _SplashScreenState extends State<SplashScreen>
                 duration: const Duration(milliseconds: 700),
                 delay: const Duration(milliseconds: 300),
                 child: Text(
-                  'TandaChain',
+                  'Rendix',
                   style: titleBold(36, color: accentGold),
                 ),
               ),
@@ -110,7 +110,7 @@ class _SplashScreenState extends State<SplashScreen>
                 duration: const Duration(milliseconds: 700),
                 delay: const Duration(milliseconds: 500),
                 child: Text(
-                  'Tu tanda, pero con superpoderes',
+                  'Tu dinero, pero con superpoderes',
                   style: bodyText(15, color: softGray),
                 ),
               ),

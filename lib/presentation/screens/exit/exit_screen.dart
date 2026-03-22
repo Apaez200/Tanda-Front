@@ -28,7 +28,7 @@ class ExitScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: darkBg,
       appBar: AppBar(
-        title: Text('Salir de la Tanda', style: titleBold(20)),
+        title: Text('Salir del Grupo', style: titleBold(20)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_rounded),
           onPressed: () => context.pop(),
