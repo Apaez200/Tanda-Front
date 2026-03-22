@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../data/mock/mock_data.dart';
-
 typedef DepositProjection = ({int day, int daysInvested, double projectedYield});
 
 class DepositSliderWidget extends StatefulWidget {
@@ -40,7 +38,7 @@ class _DepositSliderWidgetState extends State<DepositSliderWidget> {
 
   void _emit() {
     final day = _day.round().clamp(widget.minDay, widget.maxDay);
-    final cutoff = mockTanda.cutoffDay;
+    const cutoff = 30;
     final daysInvested = (cutoff - day).clamp(1, cutoff);
     final projected = widget.amount * widget.dailyNetAPY * daysInvested;
     widget.onProjectionChanged((day: day, daysInvested: daysInvested, projectedYield: projected));
@@ -55,7 +53,7 @@ class _DepositSliderWidgetState extends State<DepositSliderWidget> {
   @override
   Widget build(BuildContext context) {
     final day = _day.round().clamp(widget.minDay, widget.maxDay);
-    final cutoff = mockTanda.cutoffDay;
+    const cutoff = 30;
     final daysInvested = (cutoff - day).clamp(1, cutoff);
     final projected = widget.amount * widget.dailyNetAPY * daysInvested;
     final span = (widget.maxDay - widget.minDay).clamp(1, 1000);

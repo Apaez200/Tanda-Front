@@ -4,8 +4,10 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/prototype_state.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../injection.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -28,8 +30,16 @@ class _SplashScreenState extends State<SplashScreen>
     )..forward();
     _fillAnim = CurvedAnimation(parent: _fillCtrl, curve: Curves.easeInOut);
 
-    Timer(const Duration(milliseconds: 2500), () {
-      if (mounted) context.go('/onboarding');
+    Timer(const Duration(milliseconds: 2500), () async {
+      if (!mounted) return;
+      final publicKey = await walletRepository.getConnectedPublicKey();
+      if (!mounted) return;
+      if (publicKey != null) {
+        walletPublicKeyNotifier.value = publicKey;
+        context.go('/hub');
+      } else {
+        context.go('/onboarding');
+      }
     });
   }
 

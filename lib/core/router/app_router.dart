@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../presentation/screens/claim/claim_screen.dart';
+import '../../presentation/screens/create/create_tanda_screen.dart';
 import '../../presentation/screens/dashboard/dashboard_screen.dart';
 import '../../presentation/screens/deposit/deposit_screen.dart';
 import '../../presentation/screens/exit/exit_screen.dart';
 import '../../presentation/screens/frozen/frozen_screen.dart';
 import '../../presentation/screens/history/history_screen.dart';
+import '../../presentation/screens/hub/tanda_hub_screen.dart';
+import '../../presentation/screens/portfolio/portfolio_screen.dart';
+import '../../presentation/screens/join/join_tanda_screen.dart';
+import '../../presentation/screens/my_tandas/my_tandas_screen.dart';
 import '../../presentation/screens/onboarding/onboarding_screen.dart';
 import '../../presentation/screens/splash/splash_screen.dart';
 import '../../presentation/screens/login/login_screen.dart';
@@ -25,6 +30,22 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/onboarding',
       pageBuilder: (ctx, state) => _fade(const OnboardingScreen()),
+    ),
+    GoRoute(
+      path: '/hub',
+      pageBuilder: (ctx, state) => _fade(const TandaHubScreen()),
+    ),
+    GoRoute(
+      path: '/create-tanda',
+      pageBuilder: (ctx, state) => _slideUp(const CreateTandaScreen()),
+    ),
+    GoRoute(
+      path: '/join-tanda',
+      pageBuilder: (ctx, state) => _slideUp(const JoinTandaScreen()),
+    ),
+    GoRoute(
+      path: '/my-tandas',
+      pageBuilder: (ctx, state) => _fade(const MyTandasScreen()),
     ),
     GoRoute(
       path: '/dashboard',
@@ -49,6 +70,17 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/history',
       pageBuilder: (ctx, state) => _fade(const HistoryScreen()),
+    ),
+    GoRoute(
+      path: '/portfolio',
+      pageBuilder: (ctx, state) {
+        final extra = state.extra as Map<String, dynamic>? ?? {};
+        return _slideUp(PortfolioScreen(
+          balance: (extra['balance'] as num?)?.toDouble() ?? 0,
+          activeTandas: (extra['activeTandas'] as int?) ?? 0,
+          completedTandas: (extra['completedTandas'] as int?) ?? 0,
+        ));
+      },
     ),
   ],
 );
